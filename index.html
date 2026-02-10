@@ -1,256 +1,48 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>دروسي - محمد</title>
-    
-    <!-- PWA Settings -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="دروسي">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3426/3426653.png">
-    <meta name="theme-color" content="#4f46e5">
-
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root { 
-            --primary: #4f46e5; 
-            --bg: #f8fafc; 
-        }
-        
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background-color: var(--bg); 
-            margin: 0; 
-            padding: 15px;
-            padding-bottom: 90px;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .container { max-width: 500px; margin: auto; }
-
-        .header {
-            background: var(--primary);
-            color: white;
-            padding: 25px 20px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
-        }
-
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-size: 13px; color: #64748b; margin-bottom: 6px; font-weight: bold; }
-
-        input, select { 
-            width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; 
-            box-sizing: border-box; font-family: 'Tajawal'; outline: none; font-size: 16px;
-        }
-
-        input:focus { border-color: var(--primary); }
-
-        .save-btn { 
-            width: 100%; padding: 16px; background: var(--primary); color: white; 
-            border: none; border-radius: 12px; cursor: pointer; font-size: 18px; font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .save-btn:active { transform: scale(0.96); }
-
-        .record-card { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 16px; background: white; margin-bottom: 12px; border-radius: 15px;
-            border-right: 5px solid var(--primary);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-
-        .info strong { font-size: 16px; color: #1e293b; display: block; }
-        .tag { background: #eef2ff; color: var(--primary); padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; }
-        
-        .price { color: #10b981; font-weight: 800; font-size: 18px; }
-
-        .delete-btn { color: #f87171; background: none; border: none; font-size: 22px; padding: 5px; cursor: pointer; }
-
-        .footer { 
-            position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; 
-            color: white; padding: 20px; text-align: center; font-weight: bold; 
-            font-size: 20px; border-radius: 20px 20px 0 0;
-        }
-
-        .backup-section { text-align: center; margin-bottom: 20px; }
-        .backup-btn { background: #f1f5f9; color: #475569; border: none; padding: 8px 15px; border-radius: 10px; font-size: 12px; cursor: pointer; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson App</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<div class="container">
-    <div class="header">
-        <h2 style="margin:0;">منظم دروس محمد 📝</h2>
-        <p style="margin:5px 0 0 0; opacity: 0.8; font-size: 14px;">بياناتك تُحفظ تلقائياً على جهازك</p>
-    </div>
-    
-    <div class="card">
-        <div class="input-group">
-            <label>اسم الطالب</label>
-            <input type="text" id="name" placeholder="أدخل اسم الطالب" list="listNames">
-            <datalist id="listNames"></datalist>
-        </div>
-        <div class="input-group">
-            <label>المادة</label>
-            <input type="text" id="subject" placeholder="اسم المادة">
-        </div>
-        <div style="display: flex; gap: 10px;">
-            <div class="input-group" style="flex: 1;">
-                <label>المبلغ</label>
-                <input type="number" id="val" placeholder="0">
-            </div>
-            <div class="input-group" style="flex: 1;">
-                <label>التاريخ</label>
-                <input type="date" id="date">
-            </div>
-        </div>
-        <button class="save-btn" onclick="saveData()">حفظ الحصة ✅</button>
-    </div>
-
-    <div class="backup-section">
-        <button class="backup-btn" onclick="exportData()">تحميل نسخة احتياطية (Excel/JSON) 📥</button>
-        <button class="backup-btn" onclick="clearAllData()" style="color: #ef4444;">مسح كل البيانات 🗑️</button>
-    </div>
-
-    <div id="displayArea"></div>
-
-    <div class="footer">
-        الإجمالي: <span id="total">0</span> ج.م
-    </div>
-</div>
-
-<script>
-    // مفتاح التخزين الموحد لضمان عدم التداخل
-    const STORAGE_KEY = 'MOHAMMED_TEACHER_DB_V1';
-    let data = [];
-
-    // دالة التحميل عند فتح التطبيق
-    window.onload = function() {
-        loadData();
-        document.getElementById('date').valueAsDate = new Date();
-    };
-
-    function loadData() {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        try {
-            data = raw ? JSON.parse(raw) : [];
-        } catch (e) {
-            data = [];
-            console.error("خطأ في قراءة البيانات");
+    <header>
+        <h1>Lesson App</h1>
+        <nav>
+            <input type="text" id="search" placeholder="Search lessons...">
+            <button onclick="filterLessons()">Filter</button>
+        </nav>
+    </header>
+    <main>
+        <section id="statistics">
+            <h2>Statistics</h2>
+            <p>Total Lessons: <span id="totalLessons">0</span></p>
+            <p>Completed Lessons: <span id="completedLessons">0</span></p>
+            <p>Pending Lessons: <span id="pendingLessons">0</span></p>
+        </section>
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>WhatsApp: <a href="https://wa.me/your_number_here">Contact via WhatsApp</a></p>
+            <p>Email: <a href="mailto:info@example.com">info@example.com</a></p>
+        </section>
+        <section id="reports">
+            <h2>Monthly Reports</h2>
+            <button onclick="generateReport()">Generate Report</button>
+            <div id="reportOutput"></div>
+        </section>
+        <section id="payment-alerts">
+            <h2>Payment Alerts</h2>
+            <p>Notification for upcoming payments will be sent to registered emails.</p>
+        </section>
+    </main>
+    <script>
+        function filterLessons() {
+            // Implement filter logic
         }
-        render();
-    }
-
-    function saveData() {
-        const n = document.getElementById('name').value.trim();
-        const s = document.getElementById('subject').value.trim();
-        const v = document.getElementById('val').value;
-        const d = document.getElementById('date').value;
-
-        if (!n || !v || !d) {
-            alert("يا محمد، تأكد من كتابة الاسم والمبلغ والتاريخ");
-            return;
+        function generateReport() {
+            // Implement report generation logic
         }
-
-        const entry = {
-            id: Date.now(),
-            name: n,
-            subject: s || 'عام',
-            val: parseFloat(v),
-            date: d
-        };
-
-        data.unshift(entry);
-        sync();
-        
-        // تفريغ الحقول
-        document.getElementById('name').value = '';
-        document.getElementById('subject').value = '';
-        document.getElementById('val').value = '';
-    }
-
-    function deleteEntry(id) {
-        if (confirm("هل تريد حذف هذه الحصة؟")) {
-            data = data.filter(item => item.id !== id);
-            sync();
-        }
-    }
-
-    function sync() {
-        // حفظ فعلي في ذاكرة المتصفح الدائمة
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        render();
-    }
-
-    function render() {
-        const area = document.getElementById('displayArea');
-        const totalSpan = document.getElementById('total');
-        const listNames = document.getElementById('listNames');
-        
-        area.innerHTML = ''; 
-        let totalVal = 0;
-        
-        // تحديث قائمة الأسماء للاقتراح
-        const names = [...new Set(data.map(i => i.name))];
-        listNames.innerHTML = names.map(n => `<option value="${n}">`).join('');
-
-        if (data.length === 0) {
-            area.innerHTML = '<p style="text-align:center; color:#94a3b8; margin-top:20px;">لا توجد حصص مسجلة</p>';
-            totalSpan.innerText = '0';
-            return;
-        }
-
-        data.forEach(item => {
-            totalVal += item.val;
-            area.innerHTML += `
-                <div class="record-card">
-                    <div class="info">
-                        <strong>${item.name}</strong>
-                        <span class="tag">${item.subject}</span>
-                        <small style="display:block; color:#94a3b8; margin-top:5px;">${item.date}</small>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <span class="price">${item.val}</span>
-                        <button class="delete-btn" onclick="deleteEntry(${item.id})">×</button>
-                    </div>
-                </div>
-            `;
-        });
-
-        totalSpan.innerText = totalVal.toLocaleString();
-    }
-
-    function exportData() {
-        if (data.length === 0) return alert("لا توجد بيانات لتصديرها");
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `دروسي_محمد_${new Date().toLocaleDateString()}.json`;
-        a.click();
-    }
-
-    function clearAllData() {
-        if (confirm("تحذير! سيتم مسح كل الحصص المسجلة نهائياً. هل أنت متأكد؟")) {
-            data = [];
-            sync();
-        }
-    }
-</script>
-
+    </script>
 </body>
 </html>
