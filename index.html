@@ -4,45 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lesson App</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Lesson App</h1>
+        <h1>Welcome to the Lesson App</h1>
         <nav>
-            <input type="text" id="search" placeholder="Search lessons...">
-            <button onclick="filterLessons()">Filter</button>
+            <ul>
+                <li><a href="#sort-by-date">Sort Lessons by Date</a></li>
+                <li><a href="#statistics">Statistics</a></li>
+                <li><a href="#search">Search Lessons</a></li>
+                <li><a href="#contact-info">Contact Info</a></li>
+                <li><a href="#monthly-reports">Monthly Reports</a></li>
+                <li><a href="#payment-alerts">Payment Alerts</a></li>
+            </ul>
         </nav>
     </header>
     <main>
+        <section id="sort-by-date">
+            <h2>Sort Lessons by Date</h2>
+            <!-- Sort functionality goes here -->
+        </section>
         <section id="statistics">
             <h2>Statistics</h2>
-            <p>Total Lessons: <span id="totalLessons">0</span></p>
-            <p>Completed Lessons: <span id="completedLessons">0</span></p>
-            <p>Pending Lessons: <span id="pendingLessons">0</span></p>
+            <!-- Statistics functionality goes here -->
         </section>
-        <section id="contact">
-            <h2>Contact Us</h2>
-            <p>WhatsApp: <a href="https://wa.me/your_number_here">Contact via WhatsApp</a></p>
-            <p>Email: <a href="mailto:info@example.com">info@example.com</a></p>
+        <section id="search">
+            <h2>Search Lessons</h2>
+            <!-- Search functionality goes here -->
         </section>
-        <section id="reports">
+        <section id="contact-info">
+            <h2>Contact Info</h2>
+            <!-- Contact information goes here -->
+        </section>
+        <section id="monthly-reports">
             <h2>Monthly Reports</h2>
-            <button onclick="generateReport()">Generate Report</button>
-            <div id="reportOutput"></div>
+            <!-- Monthly reports functionality goes here -->
         </section>
         <section id="payment-alerts">
             <h2>Payment Alerts</h2>
-            <p>Notification for upcoming payments will be sent to registered emails.</p>
+            <!-- Payment alerts functionality goes here -->
         </section>
     </main>
-    <script>
-        function filterLessons() {
-            // Implement filter logic
-        }
-        function generateReport() {
-            // Implement report generation logic
-        }
-    </script>
+    <footer>
+        <p>&copy; 2026 Lesson App. All rights reserved.</p>
+    </footer>
 </body>
 </html>
