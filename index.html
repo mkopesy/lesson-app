@@ -1,53 +1,647 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lesson App</title>
-    <!-- Firebase App (the core Firebase SDK) is always required and must be first -->
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js"></script>
-    <script>
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تطبيق الحصص</title>
+  <link rel="manifest" href="manifest.json">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1a6b4a;
+      --accent: #f0a500;
+      --bg: #f4f7f5;
+      --card: #ffffff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --danger: #e74c3c;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+      --radius: 16px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; direction:rtl; }
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    header {
+      background: var(--primary); color: white;
+      padding: 18px 20px; position: sticky; top:0; z-index:100;
+      box-shadow: 0 2px 12px rgba(26,107,74,0.3);
+    }
+    header h1 { font-size:1.3rem; font-weight:900; }
+    header p { font-size:0.78rem; opacity:0.8; margin-top:2px; }
 
-        // Firestore data synchronization functions
-        async function addData() {
-            await db.collection("lessons").add({
-                title: "New Lesson",
-                content: "Lesson Content Here",
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            console.log("Data added!");
-        }
+    .tabs { display:flex; background:white; border-bottom:2px solid #e5e7eb; overflow-x:auto; }
+    .tab-btn {
+      flex:1; padding:13px 6px; border:none; background:none;
+      font-family:'Cairo',sans-serif; font-size:0.78rem; font-weight:700;
+      color:var(--muted); cursor:pointer; white-space:nowrap;
+      border-bottom:3px solid transparent; margin-bottom:-2px; transition:all 0.2s;
+    }
+    .tab-btn.active { color:var(--primary); border-bottom-color:var(--primary); }
 
-        async function getData() {
-            const snapshot = await db.collection("lessons").get();
-            snapshot.forEach((doc) => {
-                console.log(`${doc.id} => ${doc.data()}`);
-            });
-        }
+    .page { display:none; padding:16px; }
+    .page.active { display:block; }
 
-        // Example call
-        window.onload = function() {
-            addData();
-            getData();
-        };
-    </script>
+    .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+    .stat-card {
+      background:var(--card); border-radius:var(--radius);
+      padding:16px; box-shadow:var(--shadow); text-align:center;
+      animation: fadeUp 0.4s ease both;
+    }
+    .stat-card.money { background: linear-gradient(135deg,#1a6b4a,#27ae76); }
+    .stat-card.money .stat-num { color:white; }
+    .stat-card.money .stat-label { color:rgba(255,255,255,0.85); }
+    .stat-num { font-size:1.7rem; font-weight:900; color:var(--primary); line-height:1; }
+    .stat-label { font-size:0.72rem; color:var(--muted); margin-top:4px; }
+
+    .card {
+      background:var(--card); border-radius:var(--radius);
+      padding:18px; box-shadow:var(--shadow); margin-bottom:16px;
+      animation: fadeUp 0.4s ease both;
+    }
+    .card h2 { font-size:0.95rem; font-weight:700; margin-bottom:14px; color:var(--primary); display:flex; align-items:center; gap:6px; }
+
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+    .form-group { display:flex; flex-direction:column; gap:5px; }
+    label { font-size:0.75rem; font-weight:700; color:var(--muted); }
+    input, select, textarea {
+      padding:10px 12px; border:1.5px solid #e5e7eb; border-radius:10px;
+      font-family:'Cairo',sans-serif; font-size:0.86rem; color:var(--text);
+      background:#fafafa; transition:border-color 0.2s; width:100%;
+    }
+    input:focus, select:focus, textarea:focus { outline:none; border-color:var(--primary); background:white; }
+    textarea { resize:vertical; min-height:70px; }
+
+    .price-wrap { position:relative; }
+    .price-wrap input { padding-left:42px; direction:ltr; text-align:right; }
+    .price-currency { position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:0.78rem; font-weight:700; color:var(--primary); pointer-events:none; }
+
+    .btn {
+      padding:11px 18px; border:none; border-radius:10px;
+      font-family:'Cairo',sans-serif; font-size:0.86rem; font-weight:700;
+      cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px;
+    }
+    .btn-primary { background:var(--primary); color:white; width:100%; justify-content:center; margin-top:6px; }
+    .btn-primary:hover { background:#155a3d; transform:translateY(-1px); }
+    .btn-danger { background:#fef2f2; color:var(--danger); padding:6px 12px; font-size:0.75rem; }
+    .btn-danger:hover { background:var(--danger); color:white; }
+    .btn-accent { background:var(--accent); color:white; }
+    .btn-accent:hover { background:#d4920a; }
+    .btn-outline { background:white; color:var(--primary); border:1.5px solid var(--primary); padding:8px 14px; font-size:0.8rem; }
+
+    .lessons-list { display:flex; flex-direction:column; gap:10px; }
+    .lesson-card {
+      background:var(--card); border-radius:var(--radius); padding:14px;
+      box-shadow:var(--shadow); border-right:4px solid var(--primary);
+      animation: fadeUp 0.3s ease both;
+    }
+    .lesson-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+    .lesson-title { font-weight:700; font-size:0.9rem; }
+    .lesson-subject { font-size:0.72rem; color:var(--primary); background:#f0fdf4; padding:2px 8px; border-radius:20px; font-weight:700; }
+    .lesson-meta { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+    .meta-item { font-size:0.72rem; color:var(--muted); }
+    .price-badge { background:linear-gradient(135deg,#f0a500,#e8920a); color:white; padding:3px 10px; border-radius:20px; font-size:0.73rem; font-weight:700; }
+    .students-chips { display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; }
+    .student-chip { background:#f0fdf4; color:var(--primary); border:1px solid #bbf7d0; padding:2px 8px; border-radius:20px; font-size:0.7rem; font-weight:600; }
+    .lesson-actions { display:flex; gap:6px; margin-top:10px; padding-top:10px; border-top:1px solid #f3f4f6; }
+
+    .student-input-row { display:flex; gap:8px; }
+    .student-input-row input { flex:1; }
+    .student-input-row button { padding:10px 14px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:0.9rem; font-family:'Cairo',sans-serif; font-weight:700; cursor:pointer; white-space:nowrap; }
+    .added-students { display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; }
+    .added-chip { background:#f0fdf4; border:1px solid #bbf7d0; color:var(--primary); padding:4px 10px; border-radius:20px; font-size:0.72rem; font-weight:600; cursor:pointer; }
+    .added-chip:hover { background:#fee2e2; border-color:#fca5a5; color:var(--danger); }
+
+    .search-box { position:relative; margin-bottom:12px; }
+    .search-box input { padding-right:38px; }
+    .search-icon { position:absolute; right:12px; top:50%; transform:translateY(-50%); }
+
+    .filter-chips { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:12px; }
+    .chip { padding:5px 12px; border-radius:20px; font-family:'Cairo',sans-serif; font-size:0.75rem; font-weight:700; border:1.5px solid #e5e7eb; background:white; cursor:pointer; white-space:nowrap; transition:all 0.2s; }
+    .chip.active { background:var(--primary); color:white; border-color:var(--primary); }
+
+    .report-controls { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+    .report-period-btns { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+
+    .student-report-card {
+      background:var(--card); border-radius:var(--radius); padding:16px;
+      box-shadow:var(--shadow); margin-bottom:10px; border-right:4px solid var(--accent);
+      animation: fadeUp 0.3s ease both;
+    }
+    .student-report-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .student-name-big { font-size:1rem; font-weight:900; }
+    .total-badge { background:linear-gradient(135deg,#f0a500,#e8920a); color:white; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700; }
+    .report-row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid #f3f4f6; font-size:0.78rem; }
+    .report-row:last-child { border:none; }
+    .report-lesson-name { font-weight:600; }
+    .report-lesson-meta { font-size:0.7rem; color:var(--muted); }
+    .report-lesson-price { color:var(--primary); font-weight:700; white-space:nowrap; }
+    .summary-row { display:flex; justify-content:space-between; background:#f0fdf4; padding:10px 14px; border-radius:10px; margin-top:10px; font-weight:700; font-size:0.85rem; }
+    .summary-row span:last-child { color:var(--primary); }
+
+    .report-summary-card {
+      background:linear-gradient(135deg,#1a6b4a,#27ae76); color:white;
+      border-radius:var(--radius); padding:18px; margin-bottom:14px;
+      box-shadow:var(--shadow);
+    }
+    .report-summary-card h2 { color:white; margin-bottom:12px; font-size:0.9rem; }
+    .summary-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+    .summary-stat { text-align:center; }
+    .summary-stat-num { font-size:1.5rem; font-weight:900; }
+    .summary-stat-label { font-size:0.68rem; opacity:0.85; }
+
+    .empty-state { text-align:center; padding:36px 20px; color:var(--muted); }
+    .empty-state .icon { font-size:2.5rem; margin-bottom:10px; }
+    .empty-state p { font-size:0.85rem; line-height:1.6; }
+    .loading { text-align:center; padding:28px; color:var(--muted); font-size:0.85rem; }
+    .spinner { width:28px; height:28px; border:3px solid #e5e7eb; border-top-color:var(--primary); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 10px; }
+
+    .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--text); color:white; padding:11px 22px; border-radius:50px; font-size:0.83rem; font-weight:700; z-index:999; transition:transform 0.3s; white-space:nowrap; max-width:90vw; text-align:center; }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+    .toast.success { background:var(--primary); }
+    .toast.error { background:var(--danger); }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes spin { to { transform:rotate(360deg); } }
+  </style>
 </head>
 <body>
-    <h1>Welcome to the Lesson App</h1>
-    <p>Your content will be displayed here.</p>
+
+<header>
+  <h1>📚 تطبيق الحصص</h1>
+  <p>تسجيل الحصص · الأسعار · تقارير الطلاب</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('home',this)">🏠 الرئيسية</button>
+  <button class="tab-btn" onclick="showTab('add',this)">➕ حصة جديدة</button>
+  <button class="tab-btn" onclick="showTab('lessons',this)">📋 الحصص</button>
+  <button class="tab-btn" onclick="showTab('report',this)">📊 التقارير</button>
+</div>
+
+<!-- HOME -->
+<div class="page active" id="tab-home">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num" id="totalLessons">0</div>
+      <div class="stat-label">إجمالي الحصص</div>
+    </div>
+    <div class="stat-card money">
+      <div class="stat-num" id="totalRevenue">0</div>
+      <div class="stat-label">💰 إجمالي الإيرادات (ج.م)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="totalStudents">0</div>
+      <div class="stat-label">إجمالي الطلاب</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="todayLessons">0</div>
+      <div class="stat-label">حصص اليوم</div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>🕐 آخر الحصص</h2>
+    <div id="recentLessons"><div class="loading"><div class="spinner"></div>جاري التحميل...</div></div>
+  </div>
+</div>
+
+<!-- ADD -->
+<div class="page" id="tab-add">
+  <div class="card">
+    <h2>➕ إضافة حصة جديدة</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>📖 اسم الحصة *</label>
+        <input type="text" id="lessonTitle" placeholder="مثال: الجبر - درس 3">
+      </div>
+      <div class="form-group">
+        <label>🎓 المادة *</label>
+        <input type="text" id="lessonSubject" placeholder="رياضيات">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>💰 سعر الحصة للطالب (ج.م) *</label>
+        <div class="price-wrap">
+          <span class="price-currency">ج.م</span>
+          <input type="number" id="lessonPrice" placeholder="150" min="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>⏱️ المدة (دقيقة)</label>
+        <input type="number" id="lessonDuration" placeholder="60" min="1">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>📅 التاريخ</label>
+        <input type="date" id="lessonDate">
+      </div>
+      <div class="form-group">
+        <label>⏰ الوقت</label>
+        <input type="time" id="lessonTime">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>🏫 الفصل</label>
+        <input type="text" id="lessonClass" placeholder="3A">
+      </div>
+      <div class="form-group">
+        <label>📍 المكان</label>
+        <input type="text" id="lessonPlace" placeholder="المنزل / المركز">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:10px">
+      <label>👨‍🎓 إضافة الطلاب</label>
+      <div class="student-input-row">
+        <input type="text" id="studentName" placeholder="اسم الطالب" onkeydown="if(event.key==='Enter')addStudent()">
+        <button onclick="addStudent()">+ إضافة</button>
+      </div>
+      <div class="added-students" id="addedStudents"></div>
+    </div>
+    <div class="form-group" style="margin-bottom:10px">
+      <label>📝 ملاحظات</label>
+      <textarea id="lessonNotes" placeholder="أي ملاحظات..."></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="saveLesson()">💾 حفظ الحصة</button>
+  </div>
+</div>
+
+<!-- LESSONS -->
+<div class="page" id="tab-lessons">
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="ابحث عن حصة أو طالب..." oninput="filterLessons()">
+  </div>
+  <div class="filter-chips" id="subjectFilters">
+    <button class="chip active" onclick="filterBySubject('all',this)">الكل</button>
+  </div>
+  <div class="lessons-list" id="lessonsList">
+    <div class="loading"><div class="spinner"></div>جاري التحميل...</div>
+  </div>
+</div>
+
+<!-- REPORT -->
+<div class="page" id="tab-report">
+  <div class="card">
+    <h2>📊 تقرير الطلاب</h2>
+    <div class="report-controls">
+      <div class="form-group">
+        <label>📅 من تاريخ</label>
+        <input type="date" id="reportFrom">
+      </div>
+      <div class="form-group">
+        <label>📅 إلى تاريخ</label>
+        <input type="date" id="reportTo">
+      </div>
+    </div>
+    <div class="report-period-btns">
+      <button class="btn btn-outline" onclick="setReportPeriod('month')">هذا الشهر</button>
+      <button class="btn btn-outline" onclick="setReportPeriod('last30')">آخر 30 يوم</button>
+      <button class="btn btn-outline" onclick="setReportPeriod('all')">الكل</button>
+      <button class="btn btn-accent" onclick="generateReport()">📊 عرض التقرير</button>
+    </div>
+  </div>
+  <div id="reportResults"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, orderBy, query }
+    from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCpR9Fd2e-ZCtc1EYO_OX2mdSgM0XiXVjM",
+    authDomain: "lesson-app-mk99.firebaseapp.com",
+    projectId: "lesson-app-mk99",
+    storageBucket: "lesson-app-mk99.firebasestorage.app",
+    messagingSenderId: "458000068367",
+    appId: "1:458000068367:web:b07029989fc84b471fd87a"
+  };
+
+  let db = null, useFirebase = false;
+  try {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    useFirebase = true;
+  } catch(e) { console.warn("Firebase error, local mode"); }
+
+  let localLessons = JSON.parse(localStorage.getItem('lessons_v2') || '[]');
+  let tempStudents = [], allLessons = [], activeSubject = 'all';
+
+  // TABS
+  window.showTab = function(tab, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    btn.classList.add('active');
+    if (tab === 'home') updateStats();
+    if (tab === 'lessons') renderLessons();
+    if (tab === 'report') initReport();
+  }
+
+  // STUDENTS
+  window.addStudent = function() {
+    const input = document.getElementById('studentName');
+    const name = input.value.trim();
+    if (!name) return;
+    if (tempStudents.includes(name)) { showToast('الطالب موجود بالفعل', 'error'); return; }
+    tempStudents.push(name);
+    input.value = '';
+    renderTempStudents();
+    input.focus();
+  }
+  function renderTempStudents() {
+    document.getElementById('addedStudents').innerHTML =
+      tempStudents.map((s,i) => `<span class="added-chip" onclick="removeStudent(${i})">✕ ${s}</span>`).join('');
+  }
+  window.removeStudent = function(i) { tempStudents.splice(i,1); renderTempStudents(); }
+
+  // SAVE
+  window.saveLesson = async function() {
+    const title = document.getElementById('lessonTitle').value.trim();
+    const subject = document.getElementById('lessonSubject').value.trim();
+    const price = parseFloat(document.getElementById('lessonPrice').value) || 0;
+    if (!title || !subject) { showToast('يرجى إدخال اسم الحصة والمادة', 'error'); return; }
+    if (!price) { showToast('يرجى إدخال سعر الحصة', 'error'); return; }
+    if (!tempStudents.length) { showToast('يرجى إضافة طالب واحد على الأقل', 'error'); return; }
+
+    const lesson = {
+      title, subject, price,
+      date: document.getElementById('lessonDate').value || new Date().toISOString().split('T')[0],
+      time: document.getElementById('lessonTime').value || '',
+      duration: document.getElementById('lessonDuration').value || '',
+      className: document.getElementById('lessonClass').value.trim(),
+      place: document.getElementById('lessonPlace').value.trim(),
+      notes: document.getElementById('lessonNotes').value.trim(),
+      students: [...tempStudents],
+      totalAmount: price * tempStudents.length,
+      createdAt: new Date().toISOString()
+    };
+
+    try {
+      if (useFirebase) {
+        await addDoc(collection(db, "lessons"), { ...lesson, createdAt: serverTimestamp() });
+      } else {
+        lesson.id = Date.now().toString();
+        localLessons.unshift(lesson);
+        localStorage.setItem('lessons_v2', JSON.stringify(localLessons));
+      }
+      ['lessonTitle','lessonSubject','lessonPrice','lessonDate','lessonTime','lessonDuration','lessonClass','lessonPlace','lessonNotes']
+        .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+      document.getElementById('lessonDate').value = new Date().toISOString().split('T')[0];
+      tempStudents = [];
+      renderTempStudents();
+      showToast(`✅ تم الحفظ | إجمالي: ${lesson.totalAmount} ج.م`, 'success');
+      updateStats();
+    } catch(e) {
+      showToast('❌ خطأ: ' + e.message, 'error');
+    }
+  }
+
+  // DELETE
+  window.deleteLesson = async function(id) {
+    if (!confirm('هل تريد حذف هذه الحصة؟')) return;
+    try {
+      if (useFirebase) {
+        await deleteDoc(doc(db, "lessons", id));
+      } else {
+        localLessons = localLessons.filter(l => l.id !== id);
+        localStorage.setItem('lessons_v2', JSON.stringify(localLessons));
+      }
+      showToast('🗑️ تم الحذف', 'success');
+      renderLessons(); updateStats();
+    } catch(e) { showToast('❌ خطأ في الحذف', 'error'); }
+  }
+
+  // GET LESSONS
+  async function getLessons() {
+    if (useFirebase) {
+      const q = query(collection(db, "lessons"), orderBy("createdAt", "desc"));
+      const snap = await getDocs(q);
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+    return localLessons;
+  }
+
+  // RENDER LESSONS
+  async function renderLessons() {
+    document.getElementById('lessonsList').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+    allLessons = await getLessons();
+    buildSubjectFilters();
+    displayLessons(allLessons);
+  }
+
+  function buildSubjectFilters() {
+    const subjects = [...new Set(allLessons.map(l => l.subject).filter(Boolean))];
+    const c = document.getElementById('subjectFilters');
+    c.innerHTML = `<button class="chip ${activeSubject==='all'?'active':''}" onclick="filterBySubject('all',this)">الكل</button>`;
+    subjects.forEach(s => {
+      c.innerHTML += `<button class="chip ${activeSubject===s?'active':''}" onclick="filterBySubject('${s}',this)">${s}</button>`;
+    });
+  }
+
+  window.filterBySubject = function(subject, btn) {
+    activeSubject = subject;
+    document.querySelectorAll('#subjectFilters .chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    window.filterLessons();
+  }
+
+  window.filterLessons = function() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    let filtered = allLessons;
+    if (activeSubject !== 'all') filtered = filtered.filter(l => l.subject === activeSubject);
+    if (q) filtered = filtered.filter(l =>
+      l.title?.toLowerCase().includes(q) ||
+      l.subject?.toLowerCase().includes(q) ||
+      l.students?.some(s => s.toLowerCase().includes(q))
+    );
+    displayLessons(filtered);
+  }
+
+  function displayLessons(lessons) {
+    const c = document.getElementById('lessonsList');
+    if (!lessons.length) {
+      c.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>لا توجد حصص</p></div>`;
+      return;
+    }
+    c.innerHTML = lessons.map(l => `
+      <div class="lesson-card">
+        <div class="lesson-header">
+          <div class="lesson-title">${l.title}</div>
+          <span class="lesson-subject">${l.subject}</span>
+        </div>
+        <div class="lesson-meta">
+          ${l.date ? `<span class="meta-item">📅 ${l.date}</span>` : ''}
+          ${l.time ? `<span class="meta-item">⏰ ${l.time}</span>` : ''}
+          ${l.duration ? `<span class="meta-item">⏱️ ${l.duration} د</span>` : ''}
+          ${l.place ? `<span class="meta-item">📍 ${l.place}</span>` : ''}
+          ${l.price ? `<span class="price-badge">💰 ${l.price} ج.م/طالب</span>` : ''}
+        </div>
+        ${l.students?.length ? `
+          <div>
+            <div style="font-size:0.72rem;font-weight:700;color:var(--muted);margin-bottom:4px">
+              👨‍🎓 الطلاب (${l.students.length}) · إجمالي: <span style="color:var(--primary)">${(l.price||0)*l.students.length} ج.م</span>
+            </div>
+            <div class="students-chips">${l.students.map(s=>`<span class="student-chip">${s}</span>`).join('')}</div>
+          </div>
+        ` : ''}
+        ${l.notes ? `<div style="font-size:0.73rem;color:var(--muted);margin-top:6px">📝 ${l.notes}</div>` : ''}
+        <div class="lesson-actions">
+          <button class="btn btn-danger" onclick="deleteLesson('${l.id}')">🗑️ حذف</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // STATS
+  async function updateStats() {
+    const lessons = await getLessons();
+    const today = new Date().toISOString().split('T')[0];
+    const totalRevenue = lessons.reduce((s,l) => s + ((l.price||0)*(l.students?.length||0)), 0);
+    document.getElementById('totalLessons').textContent = lessons.length;
+    document.getElementById('totalRevenue').textContent = totalRevenue.toLocaleString();
+    document.getElementById('totalStudents').textContent = [...new Set(lessons.flatMap(l=>l.students||[]))].length;
+    document.getElementById('todayLessons').textContent = lessons.filter(l=>l.date===today).length;
+
+    const recent = lessons.slice(0,4);
+    const rc = document.getElementById('recentLessons');
+    if (!recent.length) {
+      rc.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>لا توجد حصص بعد<br>اضغط على "حصة جديدة" للبدء</p></div>`;
+    } else {
+      rc.innerHTML = recent.map(l=>`
+        <div style="padding:10px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700;font-size:0.86rem">${l.title}</div>
+            <div style="font-size:0.72rem;color:var(--muted)">${l.subject} · ${l.students?.length||0} طالب</div>
+          </div>
+          <div style="text-align:left">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--primary)">${(l.price||0)*(l.students?.length||0)} ج.م</div>
+            <div style="font-size:0.7rem;color:var(--muted)">${l.date||''}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+
+  // REPORT
+  function initReport() {
+    const now = new Date();
+    if (!document.getElementById('reportFrom').value) {
+      document.getElementById('reportFrom').value = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+    }
+    if (!document.getElementById('reportTo').value) {
+      document.getElementById('reportTo').value = now.toISOString().split('T')[0];
+    }
+  }
+
+  window.setReportPeriod = function(period) {
+    const now = new Date();
+    let from;
+    if (period === 'month') {
+      from = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+    } else if (period === 'last30') {
+      const d = new Date(); d.setDate(d.getDate()-30);
+      from = d.toISOString().split('T')[0];
+    } else {
+      from = '2000-01-01';
+    }
+    document.getElementById('reportFrom').value = from;
+    document.getElementById('reportTo').value = now.toISOString().split('T')[0];
+  }
+
+  window.generateReport = async function() {
+    const from = document.getElementById('reportFrom').value;
+    const to = document.getElementById('reportTo').value;
+    const container = document.getElementById('reportResults');
+    container.innerHTML = '<div class="loading"><div class="spinner"></div>جاري إنشاء التقرير...</div>';
+
+    const lessons = await getLessons();
+    const filtered = lessons.filter(l => l.date && l.date >= from && l.date <= to);
+
+    if (!filtered.length) {
+      container.innerHTML = `<div class="empty-state"><div class="icon">📊</div><p>لا توجد حصص في هذه الفترة</p></div>`;
+      return;
+    }
+
+    // Group by student
+    const studentMap = {};
+    filtered.forEach(l => {
+      (l.students||[]).forEach(student => {
+        if (!studentMap[student]) studentMap[student] = { lessons:[], total:0 };
+        studentMap[student].lessons.push(l);
+        studentMap[student].total += (l.price||0);
+      });
+    });
+
+    const grandTotal = Object.values(studentMap).reduce((s,v)=>s+v.total, 0);
+
+    let html = `
+      <div class="report-summary-card">
+        <h2>📊 ملخص الفترة: ${from} ← ${to}</h2>
+        <div class="summary-stats">
+          <div class="summary-stat">
+            <div class="summary-stat-num">${filtered.length}</div>
+            <div class="summary-stat-label">حصة</div>
+          </div>
+          <div class="summary-stat">
+            <div class="summary-stat-num">${Object.keys(studentMap).length}</div>
+            <div class="summary-stat-label">طالب</div>
+          </div>
+          <div class="summary-stat">
+            <div class="summary-stat-num">${grandTotal.toLocaleString()}</div>
+            <div class="summary-stat-label">ج.م إجمالي</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Sort by total desc
+    Object.entries(studentMap)
+      .sort((a,b) => b[1].total - a[1].total)
+      .forEach(([name, data]) => {
+        html += `
+          <div class="student-report-card">
+            <div class="student-report-header">
+              <div>
+                <div class="student-name-big">👤 ${name}</div>
+                <div style="font-size:0.72rem;color:var(--muted)">${data.lessons.length} حصة</div>
+              </div>
+              <div class="total-badge">💰 ${data.total} ج.م</div>
+            </div>
+            ${data.lessons.map(l => `
+              <div class="report-row">
+                <div>
+                  <div class="report-lesson-name">${l.title}</div>
+                  <div class="report-lesson-meta">${l.subject} · ${l.date}${l.time?' · '+l.time:''}</div>
+                </div>
+                <div class="report-lesson-price">${l.price||0} ج.م</div>
+              </div>
+            `).join('')}
+            <div class="summary-row">
+              <span>💰 الإجمالي المستحق</span>
+              <span>${data.total} ج.م</span>
+            </div>
+          </div>
+        `;
+      });
+
+    container.innerHTML = html;
+  }
+
+  // TOAST
+  window.showToast = function(msg, type='') {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = `toast ${type} show`;
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // INIT
+  document.getElementById('lessonDate').value = new Date().toISOString().split('T')[0];
+  updateStats();
+</script>
 </body>
 </html>
