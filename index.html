@@ -21,13 +21,53 @@
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; direction:rtl; }
 
+    /* LOGIN SCREEN */
+    #loginScreen {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      min-height:100vh; padding:24px; background:linear-gradient(135deg,#1a6b4a,#27ae76);
+    }
+    .login-card {
+      background:white; border-radius:24px; padding:36px 28px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.2); text-align:center; width:100%; max-width:360px;
+    }
+    .login-logo { font-size:3rem; margin-bottom:12px; }
+    .login-title { font-size:1.5rem; font-weight:900; color:var(--primary); margin-bottom:6px; }
+    .login-sub { font-size:0.85rem; color:var(--muted); margin-bottom:28px; line-height:1.6; }
+    .btn-google {
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      width:100%; padding:13px; border:2px solid #e5e7eb; border-radius:12px;
+      background:white; font-family:'Cairo',sans-serif; font-size:0.9rem; font-weight:700;
+      cursor:pointer; transition:all 0.2s; color:var(--text);
+    }
+    .btn-google:hover { border-color:#1a6b4a; background:#f0fdf4; transform:translateY(-1px); }
+    .btn-google img { width:22px; height:22px; }
+
+    /* MAIN APP */
+    #appScreen { display:none; }
+
     header {
       background: var(--primary); color: white;
-      padding: 18px 20px; position: sticky; top:0; z-index:100;
+      padding: 14px 16px; position: sticky; top:0; z-index:100;
       box-shadow: 0 2px 12px rgba(26,107,74,0.3);
+      display:flex; justify-content:space-between; align-items:center;
     }
-    header h1 { font-size:1.3rem; font-weight:900; }
-    header p { font-size:0.78rem; opacity:0.8; margin-top:2px; }
+    .header-title h1 { font-size:1.2rem; font-weight:900; }
+    .header-title p { font-size:0.72rem; opacity:0.8; margin-top:1px; }
+    .header-actions { display:flex; align-items:center; gap:8px; }
+    .user-avatar {
+      width:34px; height:34px; border-radius:50%; border:2px solid rgba(255,255,255,0.5);
+      object-fit:cover; cursor:pointer;
+    }
+    .user-avatar-placeholder {
+      width:34px; height:34px; border-radius:50%; border:2px solid rgba(255,255,255,0.5);
+      background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center;
+      font-size:0.85rem; font-weight:700; cursor:pointer;
+    }
+    .btn-signout {
+      background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3);
+      color:white; padding:5px 10px; border-radius:8px; font-family:'Cairo',sans-serif;
+      font-size:0.72rem; font-weight:700; cursor:pointer;
+    }
 
     .tabs { display:flex; background:white; border-bottom:2px solid #e5e7eb; overflow-x:auto; }
     .tab-btn {
@@ -60,6 +100,19 @@
     }
     .card h2 { font-size:0.95rem; font-weight:700; margin-bottom:14px; color:var(--primary); display:flex; align-items:center; gap:6px; }
 
+    /* CURRENCY SELECTOR */
+    .currency-bar {
+      background:white; padding:10px 16px; display:flex; align-items:center;
+      gap:10px; border-bottom:1px solid #e5e7eb; font-size:0.8rem; font-weight:700; color:var(--muted);
+    }
+    .currency-btns { display:flex; gap:6px; }
+    .currency-btn {
+      padding:4px 12px; border-radius:20px; border:1.5px solid #e5e7eb;
+      background:white; font-family:'Cairo',sans-serif; font-size:0.75rem; font-weight:700;
+      cursor:pointer; transition:all 0.2s; color:var(--muted);
+    }
+    .currency-btn.active { background:var(--primary); color:white; border-color:var(--primary); }
+
     .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
     .form-group { display:flex; flex-direction:column; gap:5px; }
     label { font-size:0.75rem; font-weight:700; color:var(--muted); }
@@ -87,6 +140,28 @@
     .btn-accent { background:var(--accent); color:white; }
     .btn-accent:hover { background:#d4920a; }
     .btn-outline { background:white; color:var(--primary); border:1.5px solid var(--primary); padding:8px 14px; font-size:0.8rem; }
+
+    /* STUDENTS TAB */
+    .student-big-card {
+      background:var(--card); border-radius:var(--radius); padding:16px;
+      box-shadow:var(--shadow); margin-bottom:12px; border-right:4px solid var(--primary);
+      animation: fadeUp 0.3s ease both;
+    }
+    .student-big-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+    .student-big-name { font-size:1.05rem; font-weight:900; }
+    .student-stats { display:flex; gap:8px; flex-wrap:wrap; }
+    .student-stat-badge { padding:4px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; }
+    .badge-lessons { background:#f0fdf4; color:var(--primary); border:1px solid #bbf7d0; }
+    .badge-money { background:linear-gradient(135deg,#f0a500,#e8920a); color:white; }
+    .student-lessons-list { border-top:1px solid #f3f4f6; padding-top:10px; }
+    .student-lesson-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:7px 0; border-bottom:1px solid #f9fafb; font-size:0.78rem;
+    }
+    .student-lesson-row:last-child { border:none; }
+    .slr-name { font-weight:600; }
+    .slr-meta { font-size:0.7rem; color:var(--muted); }
+    .slr-price { color:var(--primary); font-weight:700; }
 
     .lessons-list { display:flex; flex-direction:column; gap:10px; }
     .lesson-card {
@@ -166,143 +241,185 @@
 </head>
 <body>
 
-<header>
-  <h1>📚 تطبيق الحصص</h1>
-  <p>تسجيل الحصص · الأسعار · تقارير الطلاب</p>
-</header>
-
-<div class="tabs">
-  <button class="tab-btn active" onclick="showTab('home',this)">🏠 الرئيسية</button>
-  <button class="tab-btn" onclick="showTab('add',this)">➕ حصة جديدة</button>
-  <button class="tab-btn" onclick="showTab('lessons',this)">📋 الحصص</button>
-  <button class="tab-btn" onclick="showTab('report',this)">📊 التقارير</button>
-</div>
-
-<!-- HOME -->
-<div class="page active" id="tab-home">
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-num" id="totalLessons">0</div>
-      <div class="stat-label">إجمالي الحصص</div>
-    </div>
-    <div class="stat-card money">
-      <div class="stat-num" id="totalRevenue">0</div>
-      <div class="stat-label">💰 إجمالي الإيرادات (ج.م)</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num" id="totalStudents">0</div>
-      <div class="stat-label">إجمالي الطلاب</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num" id="todayLessons">0</div>
-      <div class="stat-label">حصص اليوم</div>
-    </div>
-  </div>
-  <div class="card">
-    <h2>🕐 آخر الحصص</h2>
-    <div id="recentLessons"><div class="loading"><div class="spinner"></div>جاري التحميل...</div></div>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">📚</div>
+    <div class="login-title">تطبيق الحصص</div>
+    <div class="login-sub">سجّل دخولك بحساب Google لحفظ بياناتك بأمان والوصول إليها من أي جهاز</div>
+    <button class="btn-google" onclick="signInWithGoogle()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+      تسجيل الدخول بـ Google
+    </button>
   </div>
 </div>
 
-<!-- ADD -->
-<div class="page" id="tab-add">
-  <div class="card">
-    <h2>➕ إضافة حصة جديدة</h2>
-    <div class="form-row">
-      <div class="form-group">
-        <label>📖 اسم الحصة *</label>
-        <input type="text" id="lessonTitle" placeholder="مثال: الجبر - درس 3">
+<!-- MAIN APP -->
+<div id="appScreen">
+  <header>
+    <div class="header-title">
+      <h1>📚 تطبيق الحصص</h1>
+      <p id="headerUserName">مرحباً!</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-signout" onclick="signOut()">خروج</button>
+      <div class="user-avatar-placeholder" id="userAvatar">؟</div>
+    </div>
+  </header>
+
+  <div class="currency-bar">
+    <span>العملة:</span>
+    <div class="currency-btns">
+      <button class="currency-btn active" id="btn-egp" onclick="setCurrency('EGP','ج.م',this)">ج.م جنيه</button>
+      <button class="currency-btn" id="btn-sar" onclick="setCurrency('SAR','ر.س',this)">ر.س ريال</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('home',this)">🏠 الرئيسية</button>
+    <button class="tab-btn" onclick="showTab('add',this)">➕ حصة جديدة</button>
+    <button class="tab-btn" onclick="showTab('students',this)">👨‍🎓 الطلاب</button>
+    <button class="tab-btn" onclick="showTab('lessons',this)">📋 الحصص</button>
+    <button class="tab-btn" onclick="showTab('report',this)">📊 التقارير</button>
+  </div>
+
+  <!-- HOME -->
+  <div class="page active" id="tab-home">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="totalLessons">0</div>
+        <div class="stat-label">إجمالي الحصص</div>
       </div>
-      <div class="form-group">
-        <label>🎓 المادة *</label>
-        <input type="text" id="lessonSubject" placeholder="رياضيات">
+      <div class="stat-card money">
+        <div class="stat-num" id="totalRevenue">0</div>
+        <div class="stat-label" id="revenueLabel">💰 إجمالي الإيرادات</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="totalStudents">0</div>
+        <div class="stat-label">إجمالي الطلاب</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="todayLessons">0</div>
+        <div class="stat-label">حصص اليوم</div>
       </div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>💰 سعر الحصة للطالب (ج.م) *</label>
-        <div class="price-wrap">
-          <span class="price-currency">ج.م</span>
-          <input type="number" id="lessonPrice" placeholder="150" min="0">
+    <div class="card">
+      <h2>🕐 آخر الحصص</h2>
+      <div id="recentLessons"><div class="loading"><div class="spinner"></div>جاري التحميل...</div></div>
+    </div>
+  </div>
+
+  <!-- ADD -->
+  <div class="page" id="tab-add">
+    <div class="card">
+      <h2>➕ إضافة حصة جديدة</h2>
+      <div class="form-group" style="margin-bottom:10px">
+        <label>👨‍🎓 إضافة الطلاب أولاً *</label>
+        <div class="student-input-row">
+          <input type="text" id="studentName" placeholder="اسم الطالب" onkeydown="if(event.key==='Enter')addStudent()">
+          <button onclick="addStudent()">+ إضافة</button>
+        </div>
+        <div class="added-students" id="addedStudents"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>📖 اسم الحصة *</label>
+          <input type="text" id="lessonTitle" placeholder="مثال: الجبر - درس 3">
+        </div>
+        <div class="form-group">
+          <label>🎓 المادة *</label>
+          <input type="text" id="lessonSubject" placeholder="رياضيات">
         </div>
       </div>
-      <div class="form-group">
-        <label>⏱️ المدة (دقيقة)</label>
-        <input type="number" id="lessonDuration" placeholder="60" min="1">
+      <div class="form-row">
+        <div class="form-group">
+          <label>💰 سعر الحصة للطالب *</label>
+          <div class="price-wrap">
+            <span class="price-currency" id="addPriceCurrency">ج.م</span>
+            <input type="number" id="lessonPrice" placeholder="150" min="0">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>⏱️ المدة (دقيقة)</label>
+          <input type="number" id="lessonDuration" placeholder="60" min="1">
+        </div>
       </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>📅 التاريخ</label>
+          <input type="date" id="lessonDate">
+        </div>
+        <div class="form-group">
+          <label>⏰ الوقت</label>
+          <input type="time" id="lessonTime">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>🏫 الفصل</label>
+          <input type="text" id="lessonClass" placeholder="3A">
+        </div>
+        <div class="form-group">
+          <label>📍 المكان</label>
+          <input type="text" id="lessonPlace" placeholder="المنزل / المركز">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px">
+        <label>📝 ملاحظات</label>
+        <textarea id="lessonNotes" placeholder="أي ملاحظات..."></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="saveLesson()">💾 حفظ الحصة</button>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>📅 التاريخ</label>
-        <input type="date" id="lessonDate">
-      </div>
-      <div class="form-group">
-        <label>⏰ الوقت</label>
-        <input type="time" id="lessonTime">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>🏫 الفصل</label>
-        <input type="text" id="lessonClass" placeholder="3A">
-      </div>
-      <div class="form-group">
-        <label>📍 المكان</label>
-        <input type="text" id="lessonPlace" placeholder="المنزل / المركز">
-      </div>
-    </div>
-    <div class="form-group" style="margin-bottom:10px">
-      <label>👨‍🎓 إضافة الطلاب</label>
-      <div class="student-input-row">
-        <input type="text" id="studentName" placeholder="اسم الطالب" onkeydown="if(event.key==='Enter')addStudent()">
-        <button onclick="addStudent()">+ إضافة</button>
-      </div>
-      <div class="added-students" id="addedStudents"></div>
-    </div>
-    <div class="form-group" style="margin-bottom:10px">
-      <label>📝 ملاحظات</label>
-      <textarea id="lessonNotes" placeholder="أي ملاحظات..."></textarea>
-    </div>
-    <button class="btn btn-primary" onclick="saveLesson()">💾 حفظ الحصة</button>
   </div>
-</div>
 
-<!-- LESSONS -->
-<div class="page" id="tab-lessons">
-  <div class="search-box">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="searchInput" placeholder="ابحث عن حصة أو طالب..." oninput="filterLessons()">
+  <!-- STUDENTS -->
+  <div class="page" id="tab-students">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="studentSearch" placeholder="ابحث عن طالب..." oninput="filterStudents()">
+    </div>
+    <div id="studentsList">
+      <div class="loading"><div class="spinner"></div>جاري التحميل...</div>
+    </div>
   </div>
-  <div class="filter-chips" id="subjectFilters">
-    <button class="chip active" onclick="filterBySubject('all',this)">الكل</button>
-  </div>
-  <div class="lessons-list" id="lessonsList">
-    <div class="loading"><div class="spinner"></div>جاري التحميل...</div>
-  </div>
-</div>
 
-<!-- REPORT -->
-<div class="page" id="tab-report">
-  <div class="card">
-    <h2>📊 تقرير الطلاب</h2>
-    <div class="report-controls">
-      <div class="form-group">
-        <label>📅 من تاريخ</label>
-        <input type="date" id="reportFrom">
-      </div>
-      <div class="form-group">
-        <label>📅 إلى تاريخ</label>
-        <input type="date" id="reportTo">
-      </div>
+  <!-- LESSONS -->
+  <div class="page" id="tab-lessons">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="ابحث عن حصة أو طالب..." oninput="filterLessons()">
     </div>
-    <div class="report-period-btns">
-      <button class="btn btn-outline" onclick="setReportPeriod('month')">هذا الشهر</button>
-      <button class="btn btn-outline" onclick="setReportPeriod('last30')">آخر 30 يوم</button>
-      <button class="btn btn-outline" onclick="setReportPeriod('all')">الكل</button>
-      <button class="btn btn-accent" onclick="generateReport()">📊 عرض التقرير</button>
+    <div class="filter-chips" id="subjectFilters">
+      <button class="chip active" onclick="filterBySubject('all',this)">الكل</button>
+    </div>
+    <div class="lessons-list" id="lessonsList">
+      <div class="loading"><div class="spinner"></div>جاري التحميل...</div>
     </div>
   </div>
-  <div id="reportResults"></div>
+
+  <!-- REPORT -->
+  <div class="page" id="tab-report">
+    <div class="card">
+      <h2>📊 تقرير الطلاب</h2>
+      <div class="report-controls">
+        <div class="form-group">
+          <label>📅 من تاريخ</label>
+          <input type="date" id="reportFrom">
+        </div>
+        <div class="form-group">
+          <label>📅 إلى تاريخ</label>
+          <input type="date" id="reportTo">
+        </div>
+      </div>
+      <div class="report-period-btns">
+        <button class="btn btn-outline" onclick="setReportPeriod('month')">هذا الشهر</button>
+        <button class="btn btn-outline" onclick="setReportPeriod('last30')">آخر 30 يوم</button>
+        <button class="btn btn-outline" onclick="setReportPeriod('all')">الكل</button>
+        <button class="btn btn-accent" onclick="generateReport()">📊 عرض التقرير</button>
+      </div>
+    </div>
+    <div id="reportResults"></div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -311,6 +428,8 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, orderBy, query }
     from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut }
+    from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCpR9Fd2e-ZCtc1EYO_OX2mdSgM0XiXVjM",
@@ -321,15 +440,84 @@
     appId: "1:458000068367:web:b07029989fc84b471fd87a"
   };
 
-  let db = null, useFirebase = false;
-  try {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    useFirebase = true;
-  } catch(e) { console.warn("Firebase error, local mode"); }
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-  let localLessons = JSON.parse(localStorage.getItem('lessons_v2') || '[]');
+  let currentUser = null;
   let tempStudents = [], allLessons = [], activeSubject = 'all';
+  let currencySymbol = 'ج.م';
+
+  // CURRENCY
+  window.setCurrency = function(code, symbol, btn) {
+    currencySymbol = symbol;
+    document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('addPriceCurrency').textContent = symbol;
+    localStorage.setItem('currency', JSON.stringify({code, symbol}));
+    updateStats();
+    const activeTab = document.querySelector('.tab-btn.active');
+    if (activeTab) {
+      const tabName = activeTab.getAttribute('onclick').match(/'(\w+)'/)?.[1];
+      if (tabName === 'students') renderStudents();
+      if (tabName === 'lessons') renderLessons();
+      if (tabName === 'report') generateReport();
+    }
+  }
+
+  function loadCurrency() {
+    const saved = localStorage.getItem('currency');
+    if (saved) {
+      const {code, symbol} = JSON.parse(saved);
+      currencySymbol = symbol;
+      document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
+      const btn = document.getElementById(code === 'SAR' ? 'btn-sar' : 'btn-egp');
+      if (btn) btn.classList.add('active');
+      document.getElementById('addPriceCurrency').textContent = symbol;
+    }
+  }
+
+  // AUTH
+  window.signInWithGoogle = async function() {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch(e) {
+      showToast('❌ خطأ في تسجيل الدخول', 'error');
+    }
+  }
+
+  window.signOut = async function() {
+    if (confirm('هل تريد تسجيل الخروج؟')) {
+      await fbSignOut(auth);
+    }
+  }
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser = user;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appScreen').style.display = 'block';
+      document.getElementById('headerUserName').textContent = 'مرحباً، ' + (user.displayName?.split(' ')[0] || 'بك');
+      const av = document.getElementById('userAvatar');
+      if (user.photoURL) {
+        av.innerHTML = `<img src="${user.photoURL}" class="user-avatar" onclick="signOut()">`;
+      } else {
+        av.textContent = user.displayName?.[0] || '؟';
+      }
+      loadCurrency();
+      document.getElementById('lessonDate').value = new Date().toISOString().split('T')[0];
+      updateStats();
+    } else {
+      currentUser = null;
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('appScreen').style.display = 'none';
+    }
+  });
+
+  function getLessonsRef() {
+    return collection(db, 'users', currentUser.uid, 'lessons');
+  }
 
   // TABS
   window.showTab = function(tab, btn) {
@@ -338,11 +526,12 @@
     document.getElementById('tab-' + tab).classList.add('active');
     btn.classList.add('active');
     if (tab === 'home') updateStats();
+    if (tab === 'students') renderStudents();
     if (tab === 'lessons') renderLessons();
     if (tab === 'report') initReport();
   }
 
-  // STUDENTS
+  // STUDENTS INPUT
   window.addStudent = function() {
     const input = document.getElementById('studentName');
     const name = input.value.trim();
@@ -364,12 +553,13 @@
     const title = document.getElementById('lessonTitle').value.trim();
     const subject = document.getElementById('lessonSubject').value.trim();
     const price = parseFloat(document.getElementById('lessonPrice').value) || 0;
+    if (!tempStudents.length) { showToast('يرجى إضافة طالب واحد على الأقل', 'error'); return; }
     if (!title || !subject) { showToast('يرجى إدخال اسم الحصة والمادة', 'error'); return; }
     if (!price) { showToast('يرجى إدخال سعر الحصة', 'error'); return; }
-    if (!tempStudents.length) { showToast('يرجى إضافة طالب واحد على الأقل', 'error'); return; }
 
     const lesson = {
       title, subject, price,
+      currency: currencySymbol,
       date: document.getElementById('lessonDate').value || new Date().toISOString().split('T')[0],
       time: document.getElementById('lessonTime').value || '',
       duration: document.getElementById('lessonDuration').value || '',
@@ -378,23 +568,17 @@
       notes: document.getElementById('lessonNotes').value.trim(),
       students: [...tempStudents],
       totalAmount: price * tempStudents.length,
-      createdAt: new Date().toISOString()
+      createdAt: serverTimestamp()
     };
 
     try {
-      if (useFirebase) {
-        await addDoc(collection(db, "lessons"), { ...lesson, createdAt: serverTimestamp() });
-      } else {
-        lesson.id = Date.now().toString();
-        localLessons.unshift(lesson);
-        localStorage.setItem('lessons_v2', JSON.stringify(localLessons));
-      }
-      ['lessonTitle','lessonSubject','lessonPrice','lessonDate','lessonTime','lessonDuration','lessonClass','lessonPlace','lessonNotes']
+      await addDoc(getLessonsRef(), lesson);
+      ['lessonTitle','lessonSubject','lessonPrice','lessonTime','lessonDuration','lessonClass','lessonPlace','lessonNotes']
         .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
       document.getElementById('lessonDate').value = new Date().toISOString().split('T')[0];
       tempStudents = [];
       renderTempStudents();
-      showToast(`✅ تم الحفظ | إجمالي: ${lesson.totalAmount} ج.م`, 'success');
+      showToast(`✅ تم الحفظ | إجمالي: ${lesson.totalAmount} ${currencySymbol}`, 'success');
       updateStats();
     } catch(e) {
       showToast('❌ خطأ: ' + e.message, 'error');
@@ -405,12 +589,7 @@
   window.deleteLesson = async function(id) {
     if (!confirm('هل تريد حذف هذه الحصة؟')) return;
     try {
-      if (useFirebase) {
-        await deleteDoc(doc(db, "lessons", id));
-      } else {
-        localLessons = localLessons.filter(l => l.id !== id);
-        localStorage.setItem('lessons_v2', JSON.stringify(localLessons));
-      }
+      await deleteDoc(doc(db, 'users', currentUser.uid, 'lessons', id));
       showToast('🗑️ تم الحذف', 'success');
       renderLessons(); updateStats();
     } catch(e) { showToast('❌ خطأ في الحذف', 'error'); }
@@ -418,12 +597,64 @@
 
   // GET LESSONS
   async function getLessons() {
-    if (useFirebase) {
-      const q = query(collection(db, "lessons"), orderBy("createdAt", "desc"));
-      const snap = await getDocs(q);
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const q = query(getLessonsRef(), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  }
+
+  // RENDER STUDENTS TAB
+  async function renderStudents() {
+    document.getElementById('studentsList').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+    allLessons = await getLessons();
+    displayStudents(allLessons);
+  }
+
+  function displayStudents(lessons) {
+    const q = document.getElementById('studentSearch')?.value.toLowerCase() || '';
+    const studentMap = {};
+    lessons.forEach(l => {
+      (l.students||[]).forEach(s => {
+        if (!studentMap[s]) studentMap[s] = { lessons:[], total:0 };
+        studentMap[s].lessons.push(l);
+        studentMap[s].total += (l.price||0);
+      });
+    });
+
+    let entries = Object.entries(studentMap).sort((a,b) => a[0].localeCompare(b[0], 'ar'));
+    if (q) entries = entries.filter(([name]) => name.toLowerCase().includes(q));
+
+    const c = document.getElementById('studentsList');
+    if (!entries.length) {
+      c.innerHTML = `<div class="empty-state"><div class="icon">👨‍🎓</div><p>لا يوجد طلاب بعد<br>أضف حصة جديدة للبدء</p></div>`;
+      return;
     }
-    return localLessons;
+
+    c.innerHTML = entries.map(([name, data]) => `
+      <div class="student-big-card">
+        <div class="student-big-header">
+          <div class="student-big-name">👤 ${name}</div>
+          <div class="student-stats">
+            <span class="student-stat-badge badge-lessons">${data.lessons.length} حصة</span>
+            <span class="student-stat-badge badge-money">💰 ${data.total} ${currencySymbol}</span>
+          </div>
+        </div>
+        <div class="student-lessons-list">
+          ${data.lessons.map(l => `
+            <div class="student-lesson-row">
+              <div>
+                <div class="slr-name">${l.title}</div>
+                <div class="slr-meta">${l.subject} · ${l.date||''}${l.time?' · '+l.time:''}</div>
+              </div>
+              <div class="slr-price">${l.price||0} ${currencySymbol}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window.filterStudents = function() {
+    displayStudents(allLessons);
   }
 
   // RENDER LESSONS
@@ -479,12 +710,12 @@
           ${l.time ? `<span class="meta-item">⏰ ${l.time}</span>` : ''}
           ${l.duration ? `<span class="meta-item">⏱️ ${l.duration} د</span>` : ''}
           ${l.place ? `<span class="meta-item">📍 ${l.place}</span>` : ''}
-          ${l.price ? `<span class="price-badge">💰 ${l.price} ج.م/طالب</span>` : ''}
+          ${l.price ? `<span class="price-badge">💰 ${l.price} ${currencySymbol}/طالب</span>` : ''}
         </div>
         ${l.students?.length ? `
           <div>
             <div style="font-size:0.72rem;font-weight:700;color:var(--muted);margin-bottom:4px">
-              👨‍🎓 الطلاب (${l.students.length}) · إجمالي: <span style="color:var(--primary)">${(l.price||0)*l.students.length} ج.م</span>
+              👨‍🎓 الطلاب (${l.students.length}) · إجمالي: <span style="color:var(--primary)">${(l.price||0)*l.students.length} ${currencySymbol}</span>
             </div>
             <div class="students-chips">${l.students.map(s=>`<span class="student-chip">${s}</span>`).join('')}</div>
           </div>
@@ -499,11 +730,14 @@
 
   // STATS
   async function updateStats() {
+    if (!currentUser) return;
     const lessons = await getLessons();
+    allLessons = lessons;
     const today = new Date().toISOString().split('T')[0];
     const totalRevenue = lessons.reduce((s,l) => s + ((l.price||0)*(l.students?.length||0)), 0);
     document.getElementById('totalLessons').textContent = lessons.length;
     document.getElementById('totalRevenue').textContent = totalRevenue.toLocaleString();
+    document.getElementById('revenueLabel').textContent = `💰 الإيرادات (${currencySymbol})`;
     document.getElementById('totalStudents').textContent = [...new Set(lessons.flatMap(l=>l.students||[]))].length;
     document.getElementById('todayLessons').textContent = lessons.filter(l=>l.date===today).length;
 
@@ -519,7 +753,7 @@
             <div style="font-size:0.72rem;color:var(--muted)">${l.subject} · ${l.students?.length||0} طالب</div>
           </div>
           <div style="text-align:left">
-            <div style="font-size:0.78rem;font-weight:700;color:var(--primary)">${(l.price||0)*(l.students?.length||0)} ج.م</div>
+            <div style="font-size:0.78rem;font-weight:700;color:var(--primary)">${(l.price||0)*(l.students?.length||0)} ${currencySymbol}</div>
             <div style="font-size:0.7rem;color:var(--muted)">${l.date||''}</div>
           </div>
         </div>
@@ -556,6 +790,7 @@
   window.generateReport = async function() {
     const from = document.getElementById('reportFrom').value;
     const to = document.getElementById('reportTo').value;
+    if (!from || !to) return;
     const container = document.getElementById('reportResults');
     container.innerHTML = '<div class="loading"><div class="spinner"></div>جاري إنشاء التقرير...</div>';
 
@@ -567,7 +802,7 @@
       return;
     }
 
-    // Group by student
+    // Group by STUDENT (الطالب هو الأساس)
     const studentMap = {};
     filtered.forEach(l => {
       (l.students||[]).forEach(student => {
@@ -593,15 +828,15 @@
           </div>
           <div class="summary-stat">
             <div class="summary-stat-num">${grandTotal.toLocaleString()}</div>
-            <div class="summary-stat-label">ج.م إجمالي</div>
+            <div class="summary-stat-label">${currencySymbol} إجمالي</div>
           </div>
         </div>
       </div>
     `;
 
-    // Sort by total desc
+    // Sort by student name (alphabetically)
     Object.entries(studentMap)
-      .sort((a,b) => b[1].total - a[1].total)
+      .sort((a,b) => a[0].localeCompare(b[0], 'ar'))
       .forEach(([name, data]) => {
         html += `
           <div class="student-report-card">
@@ -610,7 +845,7 @@
                 <div class="student-name-big">👤 ${name}</div>
                 <div style="font-size:0.72rem;color:var(--muted)">${data.lessons.length} حصة</div>
               </div>
-              <div class="total-badge">💰 ${data.total} ج.م</div>
+              <div class="total-badge">💰 ${data.total} ${currencySymbol}</div>
             </div>
             ${data.lessons.map(l => `
               <div class="report-row">
@@ -618,12 +853,12 @@
                   <div class="report-lesson-name">${l.title}</div>
                   <div class="report-lesson-meta">${l.subject} · ${l.date}${l.time?' · '+l.time:''}</div>
                 </div>
-                <div class="report-lesson-price">${l.price||0} ج.م</div>
+                <div class="report-lesson-price">${l.price||0} ${currencySymbol}</div>
               </div>
             `).join('')}
             <div class="summary-row">
               <span>💰 الإجمالي المستحق</span>
-              <span>${data.total} ج.م</span>
+              <span>${data.total} ${currencySymbol}</span>
             </div>
           </div>
         `;
@@ -638,10 +873,6 @@
     t.textContent = msg; t.className = `toast ${type} show`;
     setTimeout(() => t.classList.remove('show'), 3500);
   }
-
-  // INIT
-  document.getElementById('lessonDate').value = new Date().toISOString().split('T')[0];
-  updateStats();
 </script>
 </body>
 </html>
