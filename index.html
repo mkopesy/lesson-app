@@ -21,7 +21,6 @@
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; direction:rtl; }
 
-    /* LOGIN SCREEN */
     #loginScreen {
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       min-height:100vh; padding:24px; background:linear-gradient(135deg,#1a6b4a,#27ae76);
@@ -39,35 +38,43 @@
       background:white; font-family:'Cairo',sans-serif; font-size:0.9rem; font-weight:700;
       cursor:pointer; transition:all 0.2s; color:var(--text);
     }
-    .btn-google:hover { border-color:#1a6b4a; background:#f0fdf4; transform:translateY(-1px); }
+    .btn-google:hover { border-color:#1a6b4a; background:#f0fdf4; }
     .btn-google img { width:22px; height:22px; }
 
-    /* MAIN APP */
     #appScreen { display:none; }
 
     header {
-      background: var(--primary); color: white;
-      padding: 14px 16px; position: sticky; top:0; z-index:100;
-      box-shadow: 0 2px 12px rgba(26,107,74,0.3);
+      background:var(--primary); color:white;
+      padding:14px 16px; position:sticky; top:0; z-index:100;
+      box-shadow:0 2px 12px rgba(26,107,74,0.3);
       display:flex; justify-content:space-between; align-items:center;
     }
     .header-title h1 { font-size:1.2rem; font-weight:900; }
     .header-title p { font-size:0.72rem; opacity:0.8; margin-top:1px; }
     .header-actions { display:flex; align-items:center; gap:8px; }
-    .user-avatar {
-      width:34px; height:34px; border-radius:50%; border:2px solid rgba(255,255,255,0.5);
-      object-fit:cover; cursor:pointer;
-    }
-    .user-avatar-placeholder {
-      width:34px; height:34px; border-radius:50%; border:2px solid rgba(255,255,255,0.5);
-      background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center;
-      font-size:0.85rem; font-weight:700; cursor:pointer;
-    }
     .btn-signout {
       background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3);
       color:white; padding:5px 10px; border-radius:8px; font-family:'Cairo',sans-serif;
       font-size:0.72rem; font-weight:700; cursor:pointer;
     }
+    .user-avatar-placeholder {
+      width:34px; height:34px; border-radius:50%; border:2px solid rgba(255,255,255,0.5);
+      background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center;
+      font-size:0.85rem; font-weight:700; overflow:hidden;
+    }
+    .user-avatar-placeholder img { width:100%; height:100%; object-fit:cover; }
+
+    .currency-bar {
+      background:white; padding:10px 16px; display:flex; align-items:center;
+      gap:10px; border-bottom:1px solid #e5e7eb; font-size:0.8rem; font-weight:700; color:var(--muted);
+    }
+    .currency-btns { display:flex; gap:6px; }
+    .currency-btn {
+      padding:4px 12px; border-radius:20px; border:1.5px solid #e5e7eb;
+      background:white; font-family:'Cairo',sans-serif; font-size:0.75rem; font-weight:700;
+      cursor:pointer; transition:all 0.2s; color:var(--muted);
+    }
+    .currency-btn.active { background:var(--primary); color:white; border-color:var(--primary); }
 
     .tabs { display:flex; background:white; border-bottom:2px solid #e5e7eb; overflow-x:auto; }
     .tab-btn {
@@ -85,9 +92,8 @@
     .stat-card {
       background:var(--card); border-radius:var(--radius);
       padding:16px; box-shadow:var(--shadow); text-align:center;
-      animation: fadeUp 0.4s ease both;
     }
-    .stat-card.money { background: linear-gradient(135deg,#1a6b4a,#27ae76); }
+    .stat-card.money { background:linear-gradient(135deg,#1a6b4a,#27ae76); }
     .stat-card.money .stat-num { color:white; }
     .stat-card.money .stat-label { color:rgba(255,255,255,0.85); }
     .stat-num { font-size:1.7rem; font-weight:900; color:var(--primary); line-height:1; }
@@ -96,25 +102,11 @@
     .card {
       background:var(--card); border-radius:var(--radius);
       padding:18px; box-shadow:var(--shadow); margin-bottom:16px;
-      animation: fadeUp 0.4s ease both;
     }
     .card h2 { font-size:0.95rem; font-weight:700; margin-bottom:14px; color:var(--primary); display:flex; align-items:center; gap:6px; }
 
-    /* CURRENCY SELECTOR */
-    .currency-bar {
-      background:white; padding:10px 16px; display:flex; align-items:center;
-      gap:10px; border-bottom:1px solid #e5e7eb; font-size:0.8rem; font-weight:700; color:var(--muted);
-    }
-    .currency-btns { display:flex; gap:6px; }
-    .currency-btn {
-      padding:4px 12px; border-radius:20px; border:1.5px solid #e5e7eb;
-      background:white; font-family:'Cairo',sans-serif; font-size:0.75rem; font-weight:700;
-      cursor:pointer; transition:all 0.2s; color:var(--muted);
-    }
-    .currency-btn.active { background:var(--primary); color:white; border-color:var(--primary); }
-
     .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
-    .form-group { display:flex; flex-direction:column; gap:5px; }
+    .form-group { display:flex; flex-direction:column; gap:5px; margin-bottom:10px; }
     label { font-size:0.75rem; font-weight:700; color:var(--muted); }
     input, select, textarea {
       padding:10px 12px; border:1.5px solid #e5e7eb; border-radius:10px;
@@ -134,22 +126,24 @@
       cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px;
     }
     .btn-primary { background:var(--primary); color:white; width:100%; justify-content:center; margin-top:6px; }
-    .btn-primary:hover { background:#155a3d; transform:translateY(-1px); }
+    .btn-primary:hover { background:#155a3d; }
     .btn-danger { background:#fef2f2; color:var(--danger); padding:6px 12px; font-size:0.75rem; }
     .btn-danger:hover { background:var(--danger); color:white; }
     .btn-accent { background:var(--accent); color:white; }
     .btn-accent:hover { background:#d4920a; }
     .btn-outline { background:white; color:var(--primary); border:1.5px solid var(--primary); padding:8px 14px; font-size:0.8rem; }
+    .btn-archive { background:#f0fdf4; color:var(--primary); border:1.5px solid #bbf7d0; padding:6px 12px; font-size:0.75rem; font-family:'Cairo',sans-serif; font-weight:700; border-radius:10px; cursor:pointer; }
+    .btn-archive:hover { background:var(--primary); color:white; }
 
-    /* STUDENTS TAB */
+    /* STUDENTS */
     .student-big-card {
       background:var(--card); border-radius:var(--radius); padding:16px;
       box-shadow:var(--shadow); margin-bottom:12px; border-right:4px solid var(--primary);
-      animation: fadeUp 0.3s ease both;
     }
-    .student-big-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-    .student-big-name { font-size:1.05rem; font-weight:900; }
-    .student-stats { display:flex; gap:8px; flex-wrap:wrap; }
+    .student-big-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+    .student-big-name { font-size:1.05rem; font-weight:900; margin-bottom:4px; }
+    .student-period-date { font-size:0.7rem; color:var(--muted); }
+    .student-stats { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
     .student-stat-badge { padding:4px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; }
     .badge-lessons { background:#f0fdf4; color:var(--primary); border:1px solid #bbf7d0; }
     .badge-money { background:linear-gradient(135deg,#f0a500,#e8920a); color:white; }
@@ -161,13 +155,32 @@
     .student-lesson-row:last-child { border:none; }
     .slr-name { font-weight:600; }
     .slr-meta { font-size:0.7rem; color:var(--muted); }
-    .slr-price { color:var(--primary); font-weight:700; }
+    .slr-price { color:var(--primary); font-weight:700; white-space:nowrap; }
+    .student-actions { display:flex; gap:6px; margin-top:10px; padding-top:10px; border-top:1px solid #f3f4f6; flex-wrap:wrap; }
+
+    /* ARCHIVE */
+    .archive-section { margin-top:10px; }
+    .archive-toggle {
+      background:none; border:none; font-family:'Cairo',sans-serif; font-size:0.75rem;
+      font-weight:700; color:var(--muted); cursor:pointer; padding:4px 0;
+      display:flex; align-items:center; gap:4px;
+    }
+    .archive-list { margin-top:8px; display:none; }
+    .archive-list.open { display:block; }
+    .archive-period {
+      background:#f8fafc; border-radius:10px; padding:12px; margin-bottom:8px;
+      border-right:3px solid var(--accent);
+    }
+    .archive-period-header { display:flex; justify-content:space-between; margin-bottom:8px; }
+    .archive-period-title { font-size:0.78rem; font-weight:700; color:var(--accent); }
+    .archive-period-total { font-size:0.78rem; font-weight:700; color:var(--primary); }
+    .archive-lesson-row { font-size:0.72rem; color:var(--muted); padding:4px 0; border-bottom:1px solid #f3f4f6; display:flex; justify-content:space-between; }
+    .archive-lesson-row:last-child { border:none; }
 
     .lessons-list { display:flex; flex-direction:column; gap:10px; }
     .lesson-card {
       background:var(--card); border-radius:var(--radius); padding:14px;
       box-shadow:var(--shadow); border-right:4px solid var(--primary);
-      animation: fadeUp 0.3s ease both;
     }
     .lesson-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
     .lesson-title { font-weight:700; font-size:0.9rem; }
@@ -181,7 +194,7 @@
 
     .student-input-row { display:flex; gap:8px; }
     .student-input-row input { flex:1; }
-    .student-input-row button { padding:10px 14px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:0.9rem; font-family:'Cairo',sans-serif; font-weight:700; cursor:pointer; white-space:nowrap; }
+    .student-input-row button { padding:10px 14px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:0.9rem; font-family:'Cairo',sans-serif; font-weight:700; cursor:pointer; }
     .added-students { display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; }
     .added-chip { background:#f0fdf4; border:1px solid #bbf7d0; color:var(--primary); padding:4px 10px; border-radius:20px; font-size:0.72rem; font-weight:600; cursor:pointer; }
     .added-chip:hover { background:#fee2e2; border-color:#fca5a5; color:var(--danger); }
@@ -200,7 +213,6 @@
     .student-report-card {
       background:var(--card); border-radius:var(--radius); padding:16px;
       box-shadow:var(--shadow); margin-bottom:10px; border-right:4px solid var(--accent);
-      animation: fadeUp 0.3s ease both;
     }
     .student-report-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
     .student-name-big { font-size:1rem; font-weight:900; }
@@ -215,8 +227,7 @@
 
     .report-summary-card {
       background:linear-gradient(135deg,#1a6b4a,#27ae76); color:white;
-      border-radius:var(--radius); padding:18px; margin-bottom:14px;
-      box-shadow:var(--shadow);
+      border-radius:var(--radius); padding:18px; margin-bottom:14px; box-shadow:var(--shadow);
     }
     .report-summary-card h2 { color:white; margin-bottom:12px; font-size:0.9rem; }
     .summary-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
@@ -241,7 +252,7 @@
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-card">
     <div class="login-logo">📚</div>
@@ -254,7 +265,7 @@
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- APP -->
 <div id="appScreen">
   <header>
     <div class="header-title">
@@ -313,7 +324,7 @@
   <div class="page" id="tab-add">
     <div class="card">
       <h2>➕ إضافة حصة جديدة</h2>
-      <div class="form-group" style="margin-bottom:10px">
+      <div class="form-group">
         <label>👨‍🎓 إضافة الطلاب أولاً *</label>
         <div class="student-input-row">
           <input type="text" id="studentName" placeholder="اسم الطالب" onkeydown="if(event.key==='Enter')addStudent()">
@@ -364,7 +375,7 @@
           <input type="text" id="lessonPlace" placeholder="المنزل / المركز">
         </div>
       </div>
-      <div class="form-group" style="margin-bottom:10px">
+      <div class="form-group">
         <label>📝 ملاحظات</label>
         <textarea id="lessonNotes" placeholder="أي ملاحظات..."></textarea>
       </div>
@@ -426,7 +437,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, orderBy, query }
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, setDoc, serverTimestamp, orderBy, query }
     from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut }
     from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -449,7 +460,16 @@
   let tempStudents = [], allLessons = [], activeSubject = 'all';
   let currencySymbol = 'ج.م';
 
-  // CURRENCY
+  // ===== تحويل التاريخ للعربي مع اسم اليوم =====
+  function formatDateAr(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr + 'T00:00:00');
+    const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+    const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+    return `${days[date.getDay()]}، ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+  }
+
+  // ===== العملة =====
   window.setCurrency = function(code, symbol, btn) {
     currencySymbol = symbol;
     document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
@@ -457,13 +477,6 @@
     document.getElementById('addPriceCurrency').textContent = symbol;
     localStorage.setItem('currency', JSON.stringify({code, symbol}));
     updateStats();
-    const activeTab = document.querySelector('.tab-btn.active');
-    if (activeTab) {
-      const tabName = activeTab.getAttribute('onclick').match(/'(\w+)'/)?.[1];
-      if (tabName === 'students') renderStudents();
-      if (tabName === 'lessons') renderLessons();
-      if (tabName === 'report') generateReport();
-    }
   }
 
   function loadCurrency() {
@@ -478,19 +491,14 @@
     }
   }
 
-  // AUTH
+  // ===== AUTH =====
   window.signInWithGoogle = async function() {
-    try {
-      await signInWithPopup(auth, provider);
-    } catch(e) {
-      showToast('❌ خطأ في تسجيل الدخول', 'error');
-    }
+    try { await signInWithPopup(auth, provider); }
+    catch(e) { showToast('❌ خطأ في تسجيل الدخول', 'error'); }
   }
 
   window.signOut = async function() {
-    if (confirm('هل تريد تسجيل الخروج؟')) {
-      await fbSignOut(auth);
-    }
+    if (confirm('هل تريد تسجيل الخروج؟')) await fbSignOut(auth);
   }
 
   onAuthStateChanged(auth, (user) => {
@@ -501,7 +509,7 @@
       document.getElementById('headerUserName').textContent = 'مرحباً، ' + (user.displayName?.split(' ')[0] || 'بك');
       const av = document.getElementById('userAvatar');
       if (user.photoURL) {
-        av.innerHTML = `<img src="${user.photoURL}" class="user-avatar" onclick="signOut()">`;
+        av.innerHTML = `<img src="${user.photoURL}" alt="avatar">`;
       } else {
         av.textContent = user.displayName?.[0] || '؟';
       }
@@ -515,11 +523,10 @@
     }
   });
 
-  function getLessonsRef() {
-    return collection(db, 'users', currentUser.uid, 'lessons');
-  }
+  function lessonsRef() { return collection(db, 'users', currentUser.uid, 'lessons'); }
+  function archiveRef() { return collection(db, 'users', currentUser.uid, 'archive'); }
 
-  // TABS
+  // ===== TABS =====
   window.showTab = function(tab, btn) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -531,7 +538,7 @@
     if (tab === 'report') initReport();
   }
 
-  // STUDENTS INPUT
+  // ===== STUDENTS INPUT =====
   window.addStudent = function() {
     const input = document.getElementById('studentName');
     const name = input.value.trim();
@@ -548,7 +555,7 @@
   }
   window.removeStudent = function(i) { tempStudents.splice(i,1); renderTempStudents(); }
 
-  // SAVE
+  // ===== SAVE LESSON =====
   window.saveLesson = async function() {
     const title = document.getElementById('lessonTitle').value.trim();
     const subject = document.getElementById('lessonSubject').value.trim();
@@ -558,8 +565,7 @@
     if (!price) { showToast('يرجى إدخال سعر الحصة', 'error'); return; }
 
     const lesson = {
-      title, subject, price,
-      currency: currencySymbol,
+      title, subject, price, currency: currencySymbol,
       date: document.getElementById('lessonDate').value || new Date().toISOString().split('T')[0],
       time: document.getElementById('lessonTime').value || '',
       duration: document.getElementById('lessonDuration').value || '',
@@ -572,20 +578,17 @@
     };
 
     try {
-      await addDoc(getLessonsRef(), lesson);
+      await addDoc(lessonsRef(), lesson);
       ['lessonTitle','lessonSubject','lessonPrice','lessonTime','lessonDuration','lessonClass','lessonPlace','lessonNotes']
         .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
       document.getElementById('lessonDate').value = new Date().toISOString().split('T')[0];
-      tempStudents = [];
-      renderTempStudents();
+      tempStudents = []; renderTempStudents();
       showToast(`✅ تم الحفظ | إجمالي: ${lesson.totalAmount} ${currencySymbol}`, 'success');
       updateStats();
-    } catch(e) {
-      showToast('❌ خطأ: ' + e.message, 'error');
-    }
+    } catch(e) { showToast('❌ خطأ: ' + e.message, 'error'); }
   }
 
-  // DELETE
+  // ===== DELETE LESSON =====
   window.deleteLesson = async function(id) {
     if (!confirm('هل تريد حذف هذه الحصة؟')) return;
     try {
@@ -595,22 +598,81 @@
     } catch(e) { showToast('❌ خطأ في الحذف', 'error'); }
   }
 
-  // GET LESSONS
+  // ===== أرشفة طالب =====
+  window.archiveStudent = async function(studentName) {
+    if (!confirm(`هل تريد إغلاق الفترة الحالية للطالب "${studentName}" وبدء فترة جديدة؟`)) return;
+
+    const lessons = await getLessons();
+    const studentLessons = lessons.filter(l => l.students?.includes(studentName));
+
+    if (!studentLessons.length) { showToast('لا توجد حصص لهذا الطالب', 'error'); return; }
+
+    const today = new Date().toISOString().split('T')[0];
+    const firstDate = studentLessons[studentLessons.length-1]?.date || today;
+    const total = studentLessons.reduce((s,l) => s + (l.price||0), 0);
+
+    // حفظ في الأرشيف
+    const archiveEntry = {
+      studentName,
+      fromDate: firstDate,
+      toDate: today,
+      lessons: studentLessons.map(l => ({
+        id: l.id, title: l.title, subject: l.subject,
+        date: l.date, time: l.time, price: l.price
+      })),
+      total,
+      currency: currencySymbol,
+      archivedAt: serverTimestamp()
+    };
+
+    try {
+      await addDoc(archiveRef(), archiveEntry);
+
+      // حذف الحصص المؤرشفة من الحصص الحالية
+      for (const lesson of studentLessons) {
+        // لو الطالب الوحيد في الحصة احذفها كاملة
+        if (lesson.students.length === 1) {
+          await deleteDoc(doc(db, 'users', currentUser.uid, 'lessons', lesson.id));
+        } else {
+          // لو في طلاب تانيين في نفس الحصة، شيل الطالب ده بس
+          const updatedStudents = lesson.students.filter(s => s !== studentName);
+          await setDoc(doc(db, 'users', currentUser.uid, 'lessons', lesson.id),
+            { ...lesson, students: updatedStudents, totalAmount: (lesson.price||0) * updatedStudents.length },
+            { merge: true }
+          );
+        }
+      }
+
+      showToast(`✅ تم أرشفة ${studentLessons.length} حصة للطالب ${studentName}`, 'success');
+      renderStudents(); updateStats();
+    } catch(e) { showToast('❌ خطأ: ' + e.message, 'error'); }
+  }
+
+  // ===== GET LESSONS =====
   async function getLessons() {
-    const q = query(getLessonsRef(), orderBy("createdAt", "desc"));
+    const q = query(lessonsRef(), orderBy("createdAt", "desc"));
     const snap = await getDocs(q);
     return snap.docs.map(d => ({ id: d.id, ...d.data() }));
   }
 
-  // RENDER STUDENTS TAB
-  async function renderStudents() {
-    document.getElementById('studentsList').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
-    allLessons = await getLessons();
-    displayStudents(allLessons);
+  async function getArchive() {
+    const q = query(archiveRef(), orderBy("archivedAt", "desc"));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
   }
 
-  function displayStudents(lessons) {
+  // ===== RENDER STUDENTS =====
+  async function renderStudents() {
+    document.getElementById('studentsList').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+    const [lessons, archives] = await Promise.all([getLessons(), getArchive()]);
+    allLessons = lessons;
+    displayStudents(lessons, archives);
+  }
+
+  function displayStudents(lessons, archives) {
     const q = document.getElementById('studentSearch')?.value.toLowerCase() || '';
+
+    // تجميع الطلاب من الحصص الحالية
     const studentMap = {};
     lessons.forEach(l => {
       (l.students||[]).forEach(s => {
@@ -620,8 +682,21 @@
       });
     });
 
-    let entries = Object.entries(studentMap).sort((a,b) => a[0].localeCompare(b[0], 'ar'));
-    if (q) entries = entries.filter(([name]) => name.toLowerCase().includes(q));
+    // تجميع الأرشيف لكل طالب
+    const archiveMap = {};
+    archives.forEach(a => {
+      if (!archiveMap[a.studentName]) archiveMap[a.studentName] = [];
+      archiveMap[a.studentName].push(a);
+    });
+
+    // كل الطلاب (حاليين + مؤرشفين فقط)
+    const allStudentNames = new Set([
+      ...Object.keys(studentMap),
+      ...Object.keys(archiveMap)
+    ]);
+
+    let entries = [...allStudentNames].sort((a,b) => a.localeCompare(b, 'ar'));
+    if (q) entries = entries.filter(name => name.toLowerCase().includes(q));
 
     const c = document.getElementById('studentsList');
     if (!entries.length) {
@@ -629,35 +704,81 @@
       return;
     }
 
-    c.innerHTML = entries.map(([name, data]) => `
-      <div class="student-big-card">
-        <div class="student-big-header">
-          <div class="student-big-name">👤 ${name}</div>
-          <div class="student-stats">
-            <span class="student-stat-badge badge-lessons">${data.lessons.length} حصة</span>
-            <span class="student-stat-badge badge-money">💰 ${data.total} ${currencySymbol}</span>
-          </div>
+    c.innerHTML = entries.map(name => {
+      const data = studentMap[name];
+      const studentArchives = archiveMap[name] || [];
+      const hasCurrentLessons = !!data;
+
+      const currentSection = hasCurrentLessons ? `
+        <div class="student-stats">
+          <span class="student-stat-badge badge-lessons">${data.lessons.length} حصة حالية</span>
+          <span class="student-stat-badge badge-money">💰 ${data.total} ${currencySymbol}</span>
         </div>
         <div class="student-lessons-list">
           ${data.lessons.map(l => `
             <div class="student-lesson-row">
               <div>
                 <div class="slr-name">${l.title}</div>
-                <div class="slr-meta">${l.subject} · ${l.date||''}${l.time?' · '+l.time:''}</div>
+                <div class="slr-meta">${l.subject} · ${formatDateAr(l.date)}</div>
               </div>
               <div class="slr-price">${l.price||0} ${currencySymbol}</div>
             </div>
           `).join('')}
         </div>
-      </div>
-    `).join('');
+        <div class="student-actions">
+          <button class="btn-archive" onclick="archiveStudent('${name}')">📦 إغلاق الفترة وبدء جديدة</button>
+        </div>
+      ` : `<div style="font-size:0.78rem;color:var(--muted);padding:4px 0">لا توجد حصص في الفترة الحالية</div>`;
+
+      const archiveSection = studentArchives.length ? `
+        <div class="archive-section">
+          <button class="archive-toggle" onclick="toggleArchive('${name}')">
+            📂 الأرشيف (${studentArchives.length} فترة سابقة) ▼
+          </button>
+          <div class="archive-list" id="archive-${name}">
+            ${studentArchives.map(a => `
+              <div class="archive-period">
+                <div class="archive-period-header">
+                  <div class="archive-period-title">📅 ${formatDateAr(a.fromDate)} ← ${formatDateAr(a.toDate)}</div>
+                  <div class="archive-period-total">${a.total} ${a.currency||currencySymbol}</div>
+                </div>
+                ${(a.lessons||[]).map(l => `
+                  <div class="archive-lesson-row">
+                    <span>${l.title} · ${formatDateAr(l.date)}</span>
+                    <span>${l.price||0} ${a.currency||currencySymbol}</span>
+                  </div>
+                `).join('')}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : '';
+
+      return `
+        <div class="student-big-card">
+          <div class="student-big-header">
+            <div>
+              <div class="student-big-name">👤 ${name}</div>
+              <div class="student-period-date">الفترة الحالية</div>
+            </div>
+          </div>
+          ${currentSection}
+          ${archiveSection}
+        </div>
+      `;
+    }).join('');
+  }
+
+  window.toggleArchive = function(name) {
+    const el = document.getElementById('archive-' + name);
+    if (el) el.classList.toggle('open');
   }
 
   window.filterStudents = function() {
-    displayStudents(allLessons);
+    getArchive().then(archives => displayStudents(allLessons, archives));
   }
 
-  // RENDER LESSONS
+  // ===== RENDER LESSONS =====
   async function renderLessons() {
     document.getElementById('lessonsList').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
     allLessons = await getLessons();
@@ -706,7 +827,7 @@
           <span class="lesson-subject">${l.subject}</span>
         </div>
         <div class="lesson-meta">
-          ${l.date ? `<span class="meta-item">📅 ${l.date}</span>` : ''}
+          ${l.date ? `<span class="meta-item">📅 ${formatDateAr(l.date)}</span>` : ''}
           ${l.time ? `<span class="meta-item">⏰ ${l.time}</span>` : ''}
           ${l.duration ? `<span class="meta-item">⏱️ ${l.duration} د</span>` : ''}
           ${l.place ? `<span class="meta-item">📍 ${l.place}</span>` : ''}
@@ -728,7 +849,7 @@
     `).join('');
   }
 
-  // STATS
+  // ===== STATS =====
   async function updateStats() {
     if (!currentUser) return;
     const lessons = await getLessons();
@@ -754,14 +875,14 @@
           </div>
           <div style="text-align:left">
             <div style="font-size:0.78rem;font-weight:700;color:var(--primary)">${(l.price||0)*(l.students?.length||0)} ${currencySymbol}</div>
-            <div style="font-size:0.7rem;color:var(--muted)">${l.date||''}</div>
+            <div style="font-size:0.7rem;color:var(--muted)">${formatDateAr(l.date)}</div>
           </div>
         </div>
       `).join('');
     }
   }
 
-  // REPORT
+  // ===== REPORT =====
   function initReport() {
     const now = new Date();
     if (!document.getElementById('reportFrom').value) {
@@ -780,9 +901,7 @@
     } else if (period === 'last30') {
       const d = new Date(); d.setDate(d.getDate()-30);
       from = d.toISOString().split('T')[0];
-    } else {
-      from = '2000-01-01';
-    }
+    } else { from = '2000-01-01'; }
     document.getElementById('reportFrom').value = from;
     document.getElementById('reportTo').value = now.toISOString().split('T')[0];
   }
@@ -802,7 +921,6 @@
       return;
     }
 
-    // Group by STUDENT (الطالب هو الأساس)
     const studentMap = {};
     filtered.forEach(l => {
       (l.students||[]).forEach(student => {
@@ -816,7 +934,7 @@
 
     let html = `
       <div class="report-summary-card">
-        <h2>📊 ملخص الفترة: ${from} ← ${to}</h2>
+        <h2>📊 ملخص الفترة: ${formatDateAr(from)} ← ${formatDateAr(to)}</h2>
         <div class="summary-stats">
           <div class="summary-stat">
             <div class="summary-stat-num">${filtered.length}</div>
@@ -834,7 +952,6 @@
       </div>
     `;
 
-    // Sort by student name (alphabetically)
     Object.entries(studentMap)
       .sort((a,b) => a[0].localeCompare(b[0], 'ar'))
       .forEach(([name, data]) => {
@@ -851,7 +968,7 @@
               <div class="report-row">
                 <div>
                   <div class="report-lesson-name">${l.title}</div>
-                  <div class="report-lesson-meta">${l.subject} · ${l.date}${l.time?' · '+l.time:''}</div>
+                  <div class="report-lesson-meta">${l.subject} · ${formatDateAr(l.date)}${l.time?' · '+l.time:''}</div>
                 </div>
                 <div class="report-lesson-price">${l.price||0} ${currencySymbol}</div>
               </div>
@@ -867,7 +984,7 @@
     container.innerHTML = html;
   }
 
-  // TOAST
+  // ===== TOAST =====
   window.showToast = function(msg, type='') {
     const t = document.getElementById('toast');
     t.textContent = msg; t.className = `toast ${type} show`;
